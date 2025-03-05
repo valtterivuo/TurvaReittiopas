@@ -15,30 +15,58 @@
             margin: 0;
         }
         .chat-container {
-            width: 300px;
+            width: 320px;
+            height: 500px;
             border: 1px solid #ccc;
             border-radius: 10px;
-            padding: 10px;
             background-color: #f9f9f9;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .chat-header {
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            font-weight: bold;
+        }
+        .chat-box {
+            flex: 1;
+            padding: 10px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
         }
         .message {
+            max-width: 70%;
             padding: 8px;
             margin: 5px 0;
             border-radius: 5px;
+            word-wrap: break-word;
         }
         .bot-message {
             background-color: lightblue;
-            text-align: left;
+            align-self: flex-start;
         }
         .user-message {
             background-color: lightgreen;
-            text-align: right;
+            align-self: flex-end;
         }
         .input-container {
-            margin-top: 10px;
+            display: flex;
+            border-top: 1px solid #ccc;
+            padding: 10px;
+            background-color: white;
         }
-        button {
-            margin: 5px;
+        .input-container input {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .input-container button {
+            margin-left: 5px;
             padding: 8px;
             cursor: pointer;
             border: none;
@@ -49,10 +77,15 @@
     </style>
 </head>
 <body>
-    <div class="chat-container" id="chat">
-        <div class="message bot-message">Kirjoita luokkahuoneesi numero:</div>
-        <input type="text" id="classroom-input" class="input-container">
-        <button onclick="handleClassroomInput()">Lähetä</button>
+    <div class="chat-container">
+        <div class="chat-header">Turvallisuuden reittiopas</div>
+        <div class="chat-box" id="chat">
+            <div class="message bot-message">Kirjoita luokkahuoneesi numero:</div>
+        </div>
+        <div class="input-container">
+            <input type="text" id="classroom-input" placeholder="Syötä luokkahuone">
+            <button onclick="handleClassroomInput()">Lähetä</button>
+        </div>
     </div>
 
     <script>
@@ -69,6 +102,7 @@
             message.classList.add("message", isUser ? "user-message" : "bot-message");
             message.textContent = text;
             chat.appendChild(message);
+            chat.scrollTop = chat.scrollHeight;
         }
 
         function handleClassroomInput() {
@@ -76,8 +110,7 @@
             const classroom = input.value.trim();
             if (classroom && data[classroom]) {
                 appendMessage(classroom, true);
-                input.remove();
-                document.querySelector("button").remove();
+                input.value = "";
                 appendMessage("Mitä etsit?");
                 createChoiceButtons(classroom);
             } else {
@@ -91,6 +124,8 @@
                 const button = document.createElement("button");
                 button.textContent = option;
                 button.onclick = () => handleChoiceSelection(classroom, option);
+                button.style.display = "block";
+                button.style.marginTop = "5px";
                 chat.appendChild(button);
             });
         }
