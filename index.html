@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Turvallisuus Chat</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .chat-container {
+            width: 300px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 10px;
+            background-color: #f9f9f9;
+        }
+        .message {
+            padding: 8px;
+            margin: 5px 0;
+            border-radius: 5px;
+        }
+        .bot-message {
+            background-color: lightblue;
+            text-align: left;
+        }
+        .user-message {
+            background-color: lightgreen;
+            text-align: right;
+        }
+        .input-container {
+            margin-top: 10px;
+        }
+        button {
+            margin: 5px;
+            padding: 8px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container" id="chat">
+        <div class="message bot-message">Kirjoita luokkahuoneesi numero:</div>
+        <input type="text" id="classroom-input" class="input-container">
+        <button onclick="handleClassroomInput()">Lähetä</button>
+    </div>
+
+    <script>
+        const data = {
+            "0000": {
+                "Palosammutin": "25 metriä vasemmalle",
+                "Hätäuloskäynti": "35 metriä vasemmalle"
+            }
+        };
+
+        function appendMessage(text, isUser = false) {
+            const chat = document.getElementById("chat");
+            const message = document.createElement("div");
+            message.classList.add("message", isUser ? "user-message" : "bot-message");
+            message.textContent = text;
+            chat.appendChild(message);
+        }
+
+        function handleClassroomInput() {
+            const input = document.getElementById("classroom-input");
+            const classroom = input.value.trim();
+            if (classroom && data[classroom]) {
+                appendMessage(classroom, true);
+                input.remove();
+                document.querySelector("button").remove();
+                appendMessage("Mitä etsit?");
+                createChoiceButtons(classroom);
+            } else {
+                appendMessage("Luokkahuonetta ei löydy. Yritä uudelleen.");
+            }
+        }
+
+        function createChoiceButtons(classroom) {
+            const chat = document.getElementById("chat");
+            ["Palosammutin", "Hätäuloskäynti"].forEach(option => {
+                const button = document.createElement("button");
+                button.textContent = option;
+                button.onclick = () => handleChoiceSelection(classroom, option);
+                chat.appendChild(button);
+            });
+        }
+
+        function handleChoiceSelection(classroom, choice) {
+            appendMessage(choice, true);
+            document.querySelectorAll("button").forEach(btn => btn.remove());
+            appendMessage(data[classroom][choice]);
+        }
+    </script>
+</body>
+</html>
