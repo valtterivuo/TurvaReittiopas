@@ -50,7 +50,7 @@
             align-self: flex-start;
         }
         .user-message {
-            background-color: #cad510;
+            background-color: lightgreen;
             align-self: flex-end;
         }
         .input-container {
@@ -135,6 +135,15 @@
             document.querySelectorAll("button").forEach(btn => btn.remove());
             appendMessage(data[classroom][choice]);
             appendMessage("Kirjoita luokkahuoneesi numero uudelleen tai kysy jotain muuta.");
+            addInputContainer();
+        }
+
+        function addInputContainer() {
+            const inputContainer = document.querySelector('.input-container');
+            inputContainer.innerHTML = `
+                <input type="text" id="classroom-input" placeholder="Syötä luokkahuone">
+                <button onclick="handleClassroomInput()">Lähetä</button>
+            `;
         }
     </script>
 </body>
