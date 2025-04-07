@@ -117,20 +117,6 @@
             chat.scrollTop = chat.scrollHeight;
         }
 
-        function appendImage(floor, type = "") {
-            const chat = document.getElementById("chat");
-            const image = document.createElement("img");
-            let filename = type ? `${floor}_${type}` : `${floor}.kerros`;
-            filename = filename.replace(".kerros.kerros", ".kerros");
-            const url = `https://raw.githubusercontent.com/kayttaja/turvallisuusapp/main/Pohjakartat/${filename}.jpg`;
-            console.log("Ladataan kuva: ", url);
-            image.src = url;
-            image.alt = `Kerros ${floor}`;
-            image.classList.add("floor-image");
-            chat.appendChild(image);
-            chat.scrollTop = chat.scrollHeight;
-        }
-
         function handleFloorInput() {
             const input = document.getElementById("floor-input");
             let floor = input.value.trim();
@@ -142,8 +128,20 @@
                 input.value = "";
                 appendMessage("Valitse mitä etsit:");
                 createChoiceButtons(floor);
+            } else {
+                appendMessage("Syötä validi kerrosnumero.");
             }
-        }
+         }
+
+         function showImage(floor, option) {
+    const chat = document.getElementById("chat");
+    const image = document.createElement("img");
+    image.classList.add("floor-image");
+    // Määritä kuvan lähde (src) esimerkiksi dynaamisesti:
+    image.src = `kuvat/${floor}_${option}.jpg`; // varmista, että tämä polku vastaa todellista sijaintia
+    chat.appendChild(image);
+    chat.scrollTop = chat.scrollHeight;
+}
 
         function createChoiceButtons(floor) {
             const chat = document.getElementById("chat");
@@ -156,7 +154,8 @@
                 button.classList.add("option-button");
                 button.onclick = () => {
                     buttonContainer.remove();
-                    appendImage(floor, option);
+                    appendMessage(`Näytetään: ${option}`);
+                    showImage(floor, option);
                 };
                 buttonContainer.appendChild(button);
             });
