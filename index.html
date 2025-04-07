@@ -75,28 +75,39 @@
             background-color: #0079c2;
             color: white;
         }
+        .floor-image {
+            margin-top: 10px;
+            max-width: 100%;
+            border-radius: 5px;
+        }
+        .button-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        .option-button {
+            padding: 5px;
+            border-radius: 5px;
+            background-color: #00aacd;
+            color: white;
+            cursor: pointer;
+            margin: 3px;
+        }
     </style>
 </head>
 <body>
     <div class="chat-container">
-        <div class="chat-header"><!--<img src="haaga-helia.jpg" alt="logo" style="width:55px;height:25px;"-->Turvallisuuden reittiopas</div>
+        <div class="chat-header">Turvallisuuden reittiopas</div>
         <div class="chat-box" id="chat">
-            <div class="message bot-message">Kirjoita luokkahuoneesi numero:</div>
+            <div class="message bot-message">Kirjoita kerrosnumero:</div>
         </div>
         <div class="input-container">
-            <input type="text" id="classroom-input" placeholder="Syötä luokkahuone">
-            <button onclick="handleClassroomInput()">Lähetä</button>
+            <input type="text" id="floor-input" placeholder="Syötä kerros">
+            <button onclick="handleFloorInput()">Lähetä</button>
         </div>
     </div>
 
     <script>
-        const data = {
-            "0000": {
-                "Palosammutin": "25 metriä vasemmalle",
-                "Hätäuloskäynti": "35 metriä vasemmalle"
-            }
-        };
-
         function appendMessage(text, isUser = false) {
             const chat = document.getElementById("chat");
             const message = document.createElement("div");
@@ -106,45 +117,51 @@
             chat.scrollTop = chat.scrollHeight;
         }
 
-        function handleClassroomInput() {
-            const input = document.getElementById("classroom-input");
-            const classroom = input.value.trim();
-            if (classroom && data[classroom]) {
-                appendMessage(classroom, true);
+        function appendImage(floor, type = "") {
+            const chat = document.getElementById("chat");
+            const image = document.createElement("img");
+            let filename = type ? `${floor}_${type}` : `${floor}.kerros`;
+            filename = filename.replace(".kerros.kerros", ".kerros");
+            const url = `https://raw.githubusercontent.com/kayttaja/turvallisuusapp/main/Pohjakartat/${filename}.jpg`;
+            console.log("Ladataan kuva: ", url);
+            image.src = url;
+            image.alt = `Kerros ${floor}`;
+            image.classList.add("floor-image");
+            chat.appendChild(image);
+            chat.scrollTop = chat.scrollHeight;
+        }
+
+        function handleFloorInput() {
+            const input = document.getElementById("floor-input");
+            let floor = input.value.trim();
+            if (floor === "0") {
+                floor = "0.kellari";
+            }
+            if (floor) {
+                appendMessage(floor, true);
                 input.value = "";
-                appendMessage("Mitä etsit?");
-                createChoiceButtons(classroom);
-            } else {
-                appendMessage("Luokkahuonetta ei löydy. Yritä uudelleen.");
+                appendMessage("Valitse mitä etsit:");
+                createChoiceButtons(floor);
             }
         }
 
-        function createChoiceButtons(classroom) {
+        function createChoiceButtons(floor) {
             const chat = document.getElementById("chat");
-            ["Palosammutin", "Hätäuloskäynti"].forEach(option => {
-                const button = document.createElement("button");
-                button.textContent = option;
-                button.onclick = () => handleChoiceSelection(classroom, option);
-                button.style.display = "block";
-                button.style.marginTop = "5px";
-                chat.appendChild(button);
+            const buttonContainer = document.createElement("div");
+            buttonContainer.classList.add("button-container");
+            const options = ["", "alkusammutus", "ensiapu", "paloilmoitin", "palosammutin", "poistumistie", "deffa"];
+            options.forEach(option => {
+                const button = document.createElement("div");
+                button.textContent = option ? option : "Yleiskuva";
+                button.classList.add("option-button");
+                button.onclick = () => {
+                    buttonContainer.remove();
+                    appendImage(floor, option);
+                };
+                buttonContainer.appendChild(button);
             });
-        }
-
-        function handleChoiceSelection(classroom, choice) {
-            appendMessage(choice, true);
-            document.querySelectorAll("button").forEach(btn => btn.remove());
-            appendMessage(data[classroom][choice]);
-            appendMessage("Kirjoita luokkahuoneesi numero uudelleen, jos tarvitset lisää tietoa.");
-            addInputContainer();
-        }
-
-        function addInputContainer() {
-            const inputContainer = document.querySelector('.input-container');
-            inputContainer.innerHTML = `
-                <input type="text" id="classroom-input" placeholder="Syötä luokkahuone">
-                <button onclick="handleClassroomInput()">Lähetä</button>
-            `;
+            chat.appendChild(buttonContainer);
+            chat.scrollTop = chat.scrollHeight;
         }
     </script>
 </body>
