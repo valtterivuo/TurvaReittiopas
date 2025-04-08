@@ -108,14 +108,15 @@
     </div>
 
     <script>
-        function appendMessage(text, isUser = false) {
-            const chat = document.getElementById("chat");
-            const message = document.createElement("div");
-            message.classList.add("message", isUser ? "user-message" : "bot-message");
-            message.textContent = text;
-            chat.appendChild(message);
-            chat.scrollTop = chat.scrollHeight;
-        }
+function appendMessage(text, isUser = false) {
+    const chat = document.getElementById("chat");
+    const message = document.createElement("div");
+    message.classList.add("message", isUser ? "user-message" : "bot-message");
+    message.textContent = text;
+    chat.appendChild(message);
+    chat.scrollTop = chat.scrollHeight;
+}
+
 function handleFloorInput() {
     const input = document.getElementById("floor-input");
     let floor = input.value.trim();
@@ -129,7 +130,6 @@ function handleFloorInput() {
     appendMessage("Valitse mitä etsit:");
     createChoiceButtons(floor);
 }
-         }
 
 function showImage(floor, option) {
     const chat = document.getElementById("chat");
@@ -151,29 +151,26 @@ function showImage(floor, option) {
     chat.appendChild(image);
     chat.scrollTop = chat.scrollHeight;
 }
+
+function createChoiceButtons(floor) {
+    const chat = document.getElementById("chat");
+    const buttonContainer = document.createElement("div");
+    buttonContainer.classList.add("button-container");
+    const options = ["", "alkusammutus", "ensiapu", "paloilmoitin", "palosammutin", "poistumistie", "deffa"];
+    options.forEach(option => {
+        const button = document.createElement("div");
+        button.textContent = option ? option : "Yleiskuva";
+        button.classList.add("option-button");
+        button.onclick = () => {
+            buttonContainer.remove();
+            appendMessage(`Näytetään: ${option || 'Yleiskuva'}`);
+            showImage(floor, option);
+        };
+        buttonContainer.appendChild(button);
+    });
+    chat.appendChild(buttonContainer);
+    chat.scrollTop = chat.scrollHeight;
 }
-
-
-
-        function createChoiceButtons(floor) {
-            const chat = document.getElementById("chat");
-            const buttonContainer = document.createElement("div");
-            buttonContainer.classList.add("button-container");
-            const options = ["", "alkusammutus", "ensiapu", "paloilmoitin", "palosammutin", "poistumistie", "deffa"];
-            options.forEach(option => {
-                const button = document.createElement("div");
-                button.textContent = option ? option : "Yleiskuva";
-                button.classList.add("option-button");
-                button.onclick = () => {
-                    buttonContainer.remove();
-                    appendMessage(`Näytetään: ${option}`);
-                    showImage(floor, option);
-                };
-                buttonContainer.appendChild(button);
-            });
-            chat.appendChild(buttonContainer);
-            chat.scrollTop = chat.scrollHeight;
-        }
-    </script>
+</script>
 </body>
 </html>
