@@ -133,12 +133,20 @@
             }
          }
 
-         function showImage(floor, option) {
+function showImage(floor, option) {
     const chat = document.getElementById("chat");
     const image = document.createElement("img");
-    https:github.com/valtterivuo/TurvaReittiopas/tree/main/Pohjakartat%20(Pasila); ("floor-image");
-    // Määritä kuvan lähde (src) esimerkiksi dynaamisesti:
-    image.src = `kuvat/${floor}_${option}.jpg`; // varmista, että tämä polku vastaa todellista sijaintia
+    image.classList.add("floor-image");
+
+    const optionSuffix = option ? `_${option}` : "";
+    
+    const url = `https://raw.githubusercontent.com/valtterivuo/TurvaReittiopas/main/RAW/raw.${floor}${optionSuffix}.jpg`;
+    
+    image.src = url;
+    image.alt = `Kuva kerroksesta ${floor} (${option || 'yleiskuva'})`;
+
+    image.onerror = () => appendMessage(`Kuvaa ei löytynyt: ${url}`);
+
     chat.appendChild(image);
     chat.scrollTop = chat.scrollHeight;
 }
