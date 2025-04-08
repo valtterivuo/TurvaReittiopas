@@ -139,16 +139,23 @@ function showImage(floor, option) {
     image.classList.add("floor-image");
 
     const optionSuffix = option ? `_${option}` : "";
-    
+
     const url = `https://raw.githubusercontent.com/valtterivuo/TurvaReittiopas/main/RAW/raw.${floor}${optionSuffix}.jpg`;
-    
+
     image.src = url;
     image.alt = `Kuva kerroksesta ${floor} (${option || 'yleiskuva'})`;
 
-    image.onerror = () => appendMessage(`Kuvaa ei löytynyt: ${url}`);
+    image.onerror = () => {
+        if (option === "deffa") {
+            appendMessage(`Defibrillaattoria (deffa) ei ole tässä kerroksessa.`);
+        } else {
+            appendMessage(`Kuvaa ei löytynyt: ${url}`);
+        }
+    };
 
     chat.appendChild(image);
     chat.scrollTop = chat.scrollHeight;
+
 }
 
         function createChoiceButtons(floor) {
