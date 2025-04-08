@@ -120,11 +120,11 @@ function handleFloorInput() {
     const input = document.getElementById("floor-input");
     let floor = input.value.trim().toLowerCase();
 
-    
-    const validFloors = ["0", "1", "2", "3", "4", "5", "6", "7", "8"]; // Lisää kaikki sallitut kerrokset
+    // Sallitut kerrokset
+    const validFloors = ["0", "1", "2", "3", "4", "5", "6", "7", "8"];
 
-    
-    const floorRegex = /(?:kerros\s*)?(\d+)\.?|(?:kellari\s*1|k1|0)/;
+    // Säännöllinen lauseke kerroksen tunnistamiseen (päivitetty)
+    const floorRegex = /(?:kerros\s*)?(\d+)\.?|(?:kellari\s*1?|k1|0)/;
     const match = floor.match(floorRegex);
 
     // Tarkistetaan onko syöte kelvollinen ja kuuluu sallittuihin kerroksiin
@@ -134,7 +134,7 @@ function handleFloorInput() {
         return;
     }
 
-    
+    // Poimitaan numero tai kellarikerros osumasta
     if (floor === "k1" || floor === "kellari 1" || floor === "0" || floor === "kellari") {
         floor = "0.kellari";
     } else {
@@ -151,7 +151,6 @@ function handleFloorInput() {
     appendMessage("Valitse mitä etsit:");
     createChoiceButtons(floor);
 }
-
 function showImage(floor, option) {
     const chat = document.getElementById("chat");
     const image = document.createElement("img");
