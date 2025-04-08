@@ -121,6 +121,14 @@ function handleFloorInput() {
     const input = document.getElementById("floor-input");
     let floor = input.value.trim();
 
+    const validFloors = ["0", "1", "2", "3", "4", "5", "6", "7", "8"]; // Lisää kaikki sallitut kerrokset
+
+    if (!validFloors.includes(floor)) {
+        appendMessage("Hmm... Vaikuttaa siltä, että kyseistä kerrosta ei ole. Yritä uudelleen!");
+        input.value = "";
+        return;
+    }
+
     if (floor === "0") {
         floor = "0.kellari";
     }
@@ -136,6 +144,12 @@ function showImage(floor, option) {
     const image = document.createElement("img");
     image.classList.add("floor-image");
 
+    const validOptions = ["", "alkusammutus", "ensiapu", "paloilmoitin", "palosammutin", "poistumistie", "deffa"];
+    if (!validOptions.includes(option)) {
+        appendMessage("Ei löydy sellaista kohdetta kuin '" + option + "'. Kokeile jotain muuta!");
+        return;
+    }
+
     const optionSuffix = option ? `_${option}` : "";
     const url = `https://raw.githubusercontent.com/valtterivuo/TurvaReittiopas/main/RAW/raw.${floor}${optionSuffix}.jpg`;
 
@@ -143,9 +157,12 @@ function showImage(floor, option) {
     image.alt = `Kuva kerroksesta ${floor} (${option || 'yleiskuva'})`;
 
     image.onerror = () => {
-        if (option) {
-            appendMessage(`Kerroksessa (${floor}) ei ole kohdetta "${option}".`);
-        }
+        appendMessage(`Kerroksessa (${floor}) ei ole kohdetta "${option}".`);
+    };
+
+    chat.appendChild(image);
+    chat.scrollTop = chat.scrollHeight;
+}
     };
 
     chat.appendChild(image);
