@@ -121,7 +121,7 @@ function handleFloorInput() {
     const input = document.getElementById("floor-input");
     let floor = input.value.trim();
 
-    const validFloors = ["0", "1", "2", "3", "4", "5", "6", "7", "8"]; // Lisää kaikki sallitut kerrokset
+    const validFloors = ["0", "1", "2", "3", "4", "5", "6", "7", "8"];
 
     if (!validFloors.includes(floor)) {
         appendMessage("Hmm... Vaikuttaa siltä, että kyseistä kerrosta ei ole. Yritä uudelleen!");
@@ -162,8 +162,7 @@ function showImage(floor, option) {
 
     chat.appendChild(image);
     chat.scrollTop = chat.scrollHeight;
-}
-    };
+
 
     chat.appendChild(image);
     chat.scrollTop = chat.scrollHeight;
