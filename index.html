@@ -139,24 +139,23 @@ function showImage(floor, option) {
     image.classList.add("floor-image");
 
     const optionSuffix = option ? `_${option}` : "";
-
     const url = `https://raw.githubusercontent.com/valtterivuo/TurvaReittiopas/main/RAW/raw.${floor}${optionSuffix}.jpg`;
 
     image.src = url;
     image.alt = `Kuva kerroksesta ${floor} (${option || 'yleiskuva'})`;
 
+    // Tämä korvaa vanhan image.onerror-käsittelijän:
     image.onerror = () => {
-        if (option === "deffa") {
-            appendMessage(`Defibrillaattoria (deffa) ei ole tässä kerroksessa.`);
-        } else {
-            appendMessage(`Kuvaa ei löytynyt: ${url}`);
+        if (option) {
+            appendMessage(`Kerroksessa (${floor}) ei ole kohdetta "${option}".`);
         }
     };
 
     chat.appendChild(image);
     chat.scrollTop = chat.scrollHeight;
-
 }
+
+
 
         function createChoiceButtons(floor) {
             const chat = document.getElementById("chat");
