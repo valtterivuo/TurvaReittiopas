@@ -79,6 +79,7 @@
             margin-top: 10px;
             max-width: 100%;
             border-radius: 5px;
+            cursor: pointer;
         }
         .button-container {
             display: flex;
@@ -92,6 +93,26 @@
             color: white;
             cursor: pointer;
             margin: 3px;
+        }
+
+        .image-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+        }
+
+        .image-modal img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 10px;
+            box-shadow: 0 0 20px #000;
         }
     </style>
 </head>
@@ -107,6 +128,10 @@
         </div>
     </div>
 
+    <div class="image-modal" id="imageModal">
+        <img id="modalImage" src="" alt="Enlarged">
+    </div>
+
     <script>
 function appendMessage(text, isUser = false) {
     const chat = document.getElementById("chat");
@@ -116,25 +141,22 @@ function appendMessage(text, isUser = false) {
     chat.appendChild(message);
     chat.scrollTop = chat.scrollHeight;
 }
+
 function handleFloorInput() {
     const input = document.getElementById("floor-input");
     let floor = input.value.trim().toLowerCase();
 
-    
     const validFloors = ["0", "1", "2", "3", "4", "5", "6", "7", "8"];
 
-    
     const floorRegex = /(?:kerros\s*)?(\d+)\.?|(?:kellari\s*1?|k1|0)/;
     const match = floor.match(floorRegex);
 
-   
     if (!match) {
         appendMessage("Hmm... Vaikuttaa siltä, että kyseistä kerrosta ei ole. Yritä uudelleen!");
         input.value = "";
         return;
     }
 
-    
     if (floor === "k1" || floor === "kellari 1" || floor === "0" || floor === "kellari") {
         floor = "0.kellari";
     } else {
@@ -151,6 +173,7 @@ function handleFloorInput() {
     appendMessage("Valitse mitä etsit:");
     createChoiceButtons(floor);
 }
+
 function showImage(floor, option) {
     const chat = document.getElementById("chat");
     const image = document.createElement("img");
@@ -171,6 +194,9 @@ function showImage(floor, option) {
     image.onerror = () => {
         appendMessage(`Kerroksessa (${floor}) ei ole kohdetta "${option}".`);
     };
+
+    // kuvan laajentaminen ja sulkeminen klikkaamalla
+    image.onclick = () => openImageModal(url);
 
     chat.appendChild(image);
     chat.scrollTop = chat.scrollHeight;
@@ -195,6 +221,22 @@ function createChoiceButtons(floor) {
     chat.appendChild(buttonContainer);
     chat.scrollTop = chat.scrollHeight;
 }
+
+// kuvien modal logiikka
+const modal = document.getElementById("imageModal");
+const modalImg = document.getElementById("modalImage");
+
+function openImageModal(src) {
+    modalImg.src = src;
+    modal.style.display = "flex";
+}
+
+function closeImageModal() {
+    modal.style.display = "none";
+    modalImg.src = "";
+}
+
+modal.addEventListener("click", closeImageModal);
 </script>
 </body>
 </html>
