@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Turvallisuusopas</title>
+  <title>TurvaOpas</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -88,7 +88,7 @@
 </head>
 <body>
   <div class="container" id="mainMenu">
-    <h2>Turvallisuusopas</h2>
+    <h2>TurvaOpas</h2>
     <button class="button" onclick="showMapMenu()">Kartat</button>
     <button class="button" onclick="showGuideMenu()">Ohjeet</button>
   </div>
@@ -100,15 +100,15 @@
     <button class="button" onclick="openMap('paloilmoitin')">Paloilmoitin</button>
     <button class="button" onclick="openMap('palosammutin')">Palosammutin</button>
     <button class="button" onclick="openMap('poistumistie')">Poistumistie</button>
-    <button class="button" onclick="openMap('deffa')">Defibrillaattori</button>
+    <button class="button" onclick="openMap('defibrillaattori')">Defibrillaattori</button>
     <button class="button back-button" onclick="goBackToMain()">Takaisin</button>
   </div>
 
   <div class="container" id="guideMenu" style="display:none">
     <h2>Ohjeet</h2>
-    <button class="button" onclick="showTest(1)">Testi 1</button>
-    <button class="button" onclick="showTest(2)">Testi 2</button>
-    <button class="button" onclick="showTest(3)">Testi 3</button>    
+    <button class="button" onclick="showTest(1)">Hätäilmoituksen tekeminen</button>
+    <button class="button" onclick="showTest(2)">Ensiaputilanne</button>
+    <button class="button" onclick="showTest(3)">Kirjautumistiedot vaarantuneet</button>    
     <button class="button back-button" onclick="goBackToMain()">Takaisin</button>
   </div>
 
@@ -135,21 +135,26 @@
 
 function showTest(testNumber) {
   const testTitles = {
-    1: "Testi 1",
-    2: "Testi 2",
-    3: "Testi 3"
+    1: "Hätäilmoituksen tekeminen",
+    2: "Ensiaputilanne",
+    3: "Kirjatumistiedot vaarantuneet"
   };
 
   const testContents = {
-    1: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam.",
-    2: "Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Morbi lacinia molestie dui.",
-    3: "Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur."
+    1: "1. Soita yleiseen hätänumeroon 112:een. 2. Kerro sijaintisi ja mitä on tapahtunut. 3. Vastaa kysyttyihin kysymyksiin. 4. Noudata saamiasi ohjeita. 5. Lopeta puhelu saatuasi siihen luvan. 6. Tarvittaessa varoita muita vaarasta ja varmista turvallisuutesi.",
+    2: "1. Tee tilannearvio ja selvitä, mitä on tapahtunut. 2. Tarkista, hengittääkö henkilö: a) Jos hengittää, käännä kylkiasentoon ja soita 112 b) Jos ei hengitä, soita 112 ja aloita elvytys. 3. Soita 112 ja kerro sijainti sekä tilanne. 4. Aloita paineluelvytys: 30 painelua, 2 puhallusta. 5. Jatka elvytystä 30 painelua → 2 puhallusta, kunnes pelastushenkilökunta saapuu tai et jaksa enää elvyttää. 6. Älä jätä henkilöä yksin ennen kuin apu on paikalla.",
+    3: "Mikäli kirjautumistietosi ovat päätyneet vääriin käsiin, toimi seuraavanlaisesti. 1. Vaihda salasanasi heti, ohjeet löytyvät täältä: https://www.haaga-helia.fi/fi/opiskelijoiden-tunnistautuminen-kayttajatunnukset-ja-salasanat. 2. Tarvittaessa ota yhteyttä Haaga-Helian HelpDeskiin: helpdesk@haaga-helia.fi tai akuuteissa tilanteissa numeroon +358 800 97750 3. Vaihda sama salasana myös muista paikoista.",
   };
 
   document.getElementById("guideMenu").style.display = "none";
   document.getElementById("ohjeetView").style.display = "block";
   document.getElementById("testTitle").textContent = testTitles[testNumber];
-  document.getElementById("testContent").textContent = testContents[testNumber];
+  document.getElementById("testContent").innerHTML = testContents[testNumber]
+  .split(/(?=\d\.)/)
+  .map(line => line.trim())
+  .filter(line => line.length > 0)
+  .map(line => `<p>${line}</p>`)
+  .join("");
 }
 
 function goBackToGuide() {
@@ -163,7 +168,7 @@ function goBackToGuide() {
       "paloilmoitin": ["0.kellari", "1", "2", "3", "4", "5", "6", "7", "8"],
       "palosammutin": ["1", "2", "3", "4", "5", "6", "8"],
       "poistumistie": ["0.kellari", "1", "2", "3", "4", "5", "6", "7", "8"],
-      "deffa": ["1"]
+      "defibrillaattori": ["1"]
     };
 
     function showMapMenu() {
